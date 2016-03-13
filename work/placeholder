@@ -1,0 +1,1 @@
+Copy the binaries you want to reverse/debug here. This gets mounted to /root/work on the container. 
