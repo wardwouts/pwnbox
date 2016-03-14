@@ -10,9 +10,9 @@ You can grab the container from Docker Hub: `docker pull superkojiman/pwnbox`
 docker run -it --rm \
     -v ${PWD}/rc:/root \
     -v ${PWD}/work:/root/work \
-    -h pwnbox64 \
+    -h pwnbox \
     --security-opt seccomp:unconfined \
-    superkojiman/pwnbox64
+    superkojiman/pwnbox
 ```
 
 ### OS X VMware Fusion
