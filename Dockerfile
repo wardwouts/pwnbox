@@ -28,6 +28,7 @@ RUN apt-get install -y \
     libc6-armhf-cross \
     gdb-multiarch \
     nasm \
+    vim \
     tmux \
     git \
     binwalk \
