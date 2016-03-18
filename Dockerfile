@@ -75,6 +75,8 @@ RUN git clone https://github.com/hellman/libformatstr.git /opt/libformatstr && \
     cd /opt/libformatstr && \
     python setup.py install
 
+RUN git clone https://github.com/niklasb/libc-database /opt/libc-database
+
 # gdbinit files
 RUN git clone https://github.com/bruce30262/peda.git /opt/peda
 RUN git clone https://github.com/zachriggle/pwndbg /opt/pwndbg
