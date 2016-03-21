@@ -9,7 +9,7 @@ You can grab the container from Docker Hub: `docker pull superkojiman/pwnbox`
 ```
 docker run -it --rm \
     -v ${PWD}/rc:/root \
-    -v ${PWD}/work:/root/work \
+    -v ${PWD}/work:/work \
     -h pwnbox \
     --security-opt seccomp:unconfined \
     superkojiman/pwnbox

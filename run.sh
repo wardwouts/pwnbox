@@ -13,8 +13,8 @@ if [[ ! -d ${PWD}/work ]]; then
 fi
 
 docker run -it --rm \
+    -v ${PWD}/work:/work \
     -v ${PWD}/rc:/root \
-    -v ${PWD}/work:/root/work \
     -h pwnbox \
     --security-opt seccomp:unconfined \
     superkojiman/pwnbox
