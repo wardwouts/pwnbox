@@ -62,6 +62,8 @@ RUN git clone https://github.com/aquynh/capstone /opt/capstone && \
 
 RUN git clone https://github.com/radare/radare2.git /opt/radare2 && \
     cd /opt/radare2 && \
+    git fetch --tags && \
+    git checkout $(git describe --tags $(git rev-list --tags --max-count=1)) && \
     ./sys/install.sh 
 
 RUN git clone https://github.com/sashs/Ropper.git /opt/ropper && \
