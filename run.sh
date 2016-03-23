@@ -12,9 +12,11 @@ if [[ ! -d ${PWD}/work ]]; then
     mkdir -p ${PWD}/work
 fi
 
+#    --security-opt seccomp:unconfined \
+#    --privileged \
 docker run -it --rm \
     -v ${PWD}/work:/work \
     -v ${PWD}/rc:/root \
     -h pwnbox \
-    --security-opt seccomp:unconfined \
+    --privileged \
     superkojiman/pwnbox

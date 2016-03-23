@@ -4,16 +4,22 @@
 You can grab the container from Docker Hub: `docker pull superkojiman/pwnbox`
  1. Create a `rc` directory. Your custom configuration files in $HOME go here. Eg: .gdbinit, .radare2rc, .bashrc, .vimrc, etc... This gets mounted to /root on the container.
  1. Create a `work` directory. Copy the binaries you want to reverse/debug here. This gets mounted to /root/work on the container. 
- 1. Run the following command to start the container with those directories mounted: 
+ 1. Run the included `run.sh` script which starts the container with those directories mounted. Here's what `run.sh` does: 
 
 ```
 docker run -it --rm \
     -v ${PWD}/rc:/root \
     -v ${PWD}/work:/work \
     -h pwnbox \
-    --security-opt seccomp:unconfined \
+    --privileged \
     superkojiman/pwnbox
 ```
+
+### Limitations
+ 1. By default, `--privileged` is passed to `docker` so you can edit files in `/proc`, and allow `ptrace`. 
+ 1. If you don't care about editing files in `/proc`, you can swap out `--privileged` with `--security-opt seccomp:unconfined` instead, which will allow `ptrace`.
+ 1. `core` files are empty when created in a mounted directory. So you'll need to set `/proc/sys/kernel/core\_pattern` to where you want `core` files dumped. Eg: `/tmp/core`
+
 
 ### OS X VMware Fusion
 To build the container locally using the Dockerfile: 
