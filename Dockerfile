@@ -18,6 +18,7 @@ RUN apt-get install -y \
     build-essential \
     gdb \
     python-dev \
+    python3-dev \
     python-pip \
     python3-pip \
     binutils-arm-linux-gnueabi \
@@ -37,6 +38,7 @@ RUN apt-get install -y \
     autoconf \
     socat \
     netcat \
+    libglib2.0-dev \
     libc6:i386 \
     libncurses5:i386 \
     libstdc++6:i386 \
@@ -49,12 +51,21 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN pip install pycipher uncompyle ropgadget distorm3
 RUN yes | pip uninstall capstone
 RUN pip install --upgrade git+https://github.com/binjitsu/binjitsu.git
-RUN pip3 install pycparser
+RUN pip3 install pycparser \
+    psutil>=3.1.0 \
+    python-ptrace>=0.8
 
 # Install stuff from GitHub repos
 RUN git clone https://github.com/aquynh/capstone /opt/capstone && \
     cd /opt/capstone && \
     git checkout -t origin/next && \
+    ./make.sh install && \
+    cd bindings/python && \
+    python setup.py install && \
+    python3 setup.py install
+
+RUN git clone https://github.com/unicorn-engine/unicorn /opt/unicorn && \
+    cd /opt/unicorn && \
     ./make.sh install && \
     cd bindings/python && \
     python setup.py install && \
@@ -80,8 +91,8 @@ RUN git clone https://github.com/hellman/libformatstr.git /opt/libformatstr && \
 RUN git clone https://github.com/niklasb/libc-database /opt/libc-database
 
 # gdbinit files
-RUN git clone https://github.com/bruce30262/peda.git /opt/peda
-RUN git clone https://github.com/zachriggle/pwndbg /opt/pwndbg
+RUN git clone https://github.com/longld/peda.git /opt/peda
+RUN git clone https://github.com/zachriggle/pwndbg.git /opt/pwndbg
 RUN git clone https://github.com/hugsy/gef.git /opt/gef
 
 ENTRYPOINT ["/bin/bash"]
