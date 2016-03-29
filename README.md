@@ -6,14 +6,12 @@ You can grab the container from Docker Hub: `docker pull superkojiman/pwnbox`
  1. Create a `work` directory. Copy the binaries you want to reverse/debug here. This gets mounted to /root/work on the container. 
  1. Run the included `run.sh` script which starts the container with those directories mounted. Here's what `run.sh` does: 
 
-```
-docker run -it --rm \
-    -v ${PWD}/rc:/root \
-    -v ${PWD}/work:/work \
-    -h pwnbox \
-    --privileged \
-    superkojiman/pwnbox
-```
+        docker run -it --rm \
+            -v ${PWD}/rc:/root \
+            -v ${PWD}/work:/work \
+            -h pwnbox \
+            --privileged \
+            superkojiman/pwnbox
 
 ### Limitations
  1. By default, `--privileged` is passed to `docker` so you can edit files in `/proc`, and allow `ptrace`. 
