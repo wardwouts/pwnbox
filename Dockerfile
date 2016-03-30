@@ -52,8 +52,8 @@ RUN pip install pycipher uncompyle ropgadget distorm3
 RUN yes | pip uninstall capstone
 RUN pip install --upgrade git+https://github.com/binjitsu/binjitsu.git
 RUN pip3 install pycparser \
-    psutil>=3.1.0 \
-    python-ptrace>=0.8
+    "psutil>=3.1.0" \
+    "python-ptrace>=0.8"
 
 # Install stuff from GitHub repos
 RUN git clone https://github.com/aquynh/capstone /opt/capstone && \
