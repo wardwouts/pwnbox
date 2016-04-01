@@ -48,7 +48,7 @@ RUN apt-get -y autoremove
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install stuff from pip repos
-RUN pip install pycipher uncompyle ropgadget distorm3
+RUN pip install pycipher uncompyle ropgadget distorm3 filebytes
 RUN yes | pip uninstall capstone
 RUN pip install --upgrade git+https://github.com/binjitsu/binjitsu.git
 RUN pip3 install pycparser \
