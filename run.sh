@@ -18,5 +18,6 @@ docker run -it --rm \
     -v ${PWD}/work:/work \
     -v ${PWD}/rc:/root \
     -h pwnbox \
+    --name pwnbox \
     --privileged \
     superkojiman/pwnbox
