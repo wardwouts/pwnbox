@@ -1,1 +1,0 @@
-Your custom configuration files in $HOME go here. Eg: .gdbinit, .radare2rc, .bashrc, .vimrc, etc... This gets mounted to /root on the container. 

@@ -1,23 +1,70 @@
 #!/usr/bin/env bash
 
 # Run superkojiman/pwnbox container in docker. 
-# Store your .gdbinit, .radare2rc, .vimrc, etc in rc as it gets mounted to /root
-# Store the binaries you want to pwn/reverse in ./work as it gets mounted to /root/work
+# Store your .gdbinit, .radare2rc, .vimrc, etc in a ./rc directory. The contents will be copied to
+# /root/ in the container.
 
-if [[ ! -d ${PWD}/rc ]]; then
-    mkdir -p ${PWD}/rc
+ESC="\e["
+RESET=$ESC"39m"
+RED=$ESC"31m"
+GREEN=$ESC"32m"
+BLUE=$ESC"34m"
+
+if [[ -z ${1} ]]; then
+    echo -e "${RED}Missing argument CTF name.${RESET}"
+    exit 0
 fi
 
-if [[ ! -d ${PWD}/work ]]; then 
-    mkdir -p ${PWD}/work
+ctf_name=${1}
+
+# set default docker-machine env ctf if available
+if [[ ! -z `which docker-machine ctf` ]]; then
+    docker-machine env ctf > /dev/null 2>&1
+    if [[ $? -eq 0 ]]; then
+        eval `docker-machine env ctf`
+    fi
+else
+    echo "Could not find docker-machine ctf"
+    exit 0
 fi
 
-#    --security-opt seccomp:unconfined \
-#    --privileged \
-docker run -it --rm \
-    -v ${PWD}/work:/work \
-    -v ${PWD}/rc:/root \
-    -h pwnbox \
-    --name pwnbox \
-    --privileged \
+# Create docker container and run in the background
+docker run -it \
+    -d \
+    -h ${ctf_name}-pwnbox \
+    --security-opt seccomp:unconfined \
+    --name ${ctf_name}-pwnbox \
     superkojiman/pwnbox
+
+# Tar config files in rc and extract it into the container
+if [[ -d rc ]]; then
+    cd rc
+    if [[ -f rc.tar ]]; then
+        rm -f rc.tar
+    fi
+    for i in .* *; do
+        if [[ ! ${i} == "." && ! ${i} == ".." ]]; then
+            tar rf rc.tar ${i}
+        fi
+    done
+    cd - > /dev/null 2>&1
+    cat rc/rc.tar | docker cp - ${ctf_name}-pwnbox:/root/
+else
+    echo -e "${RED}No rc directory found. Nothing to copy to container.${RESET}"
+fi
+
+# Create stop/rm script for container
+cat << EOF > ${ctf_name}-stop.sh
+#!/bin/bash
+docker stop ${ctf_name}-pwnbox
+docker rm ${ctf_name}-pwnbox
+rm -f ${ctf_name}-stop.sh
+EOF
+chmod 755 ${ctf_name}-stop.sh
+
+# Create a workdir for this CTF
+docker exec ${ctf_name}-pwnbox mkdir /root/work
+
+# Get a shell
+echo -e "${GREEN}Let's pwn stuff!${RESET}"
+docker attach ${ctf_name}-pwnbox
