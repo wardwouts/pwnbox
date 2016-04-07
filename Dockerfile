@@ -38,6 +38,7 @@ RUN apt-get install -y \
     autoconf \
     socat \
     netcat \
+    wget \
     libglib2.0-dev \
     libc6:i386 \
     libncurses5:i386 \
