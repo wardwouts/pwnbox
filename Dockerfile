@@ -1,9 +1,9 @@
-##################################################################
+#----------------------------------------------------------------#
 # Dockerfile to build a container for binary reverse engineering #
 # and exploitation. Suitable for CTFs.                           #
 #                                                                #
 # To build: docker build -t superkojiman/pwnbox64 .              #
-##################################################################
+#----------------------------------------------------------------#
 
 FROM phusion/baseimage
 MAINTAINER superkojiman@techorganic.com
@@ -13,7 +13,9 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN dpkg --add-architecture i386
 RUN apt-get update && apt-get -y upgrade
 
-# Install packages from Ubuntu repos
+#-------------------------------------#
+# Install packages from Ubuntu repos  #
+#-------------------------------------#
 RUN apt-get install -y \
     build-essential \
     gdb \
@@ -48,15 +50,28 @@ RUN apt-get install -y \
 RUN apt-get -y autoremove
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Install stuff from pip repos
-RUN pip install pycipher uncompyle ropgadget distorm3 filebytes
+#-------------------------------------#
+# Install stuff from pip repos        #
+#-------------------------------------#
+RUN pip install \
+    pycipher \
+    uncompyle \
+    ropgadget \
+    distorm3 \
+    filebytes \
+    python-constraint
+
 RUN yes | pip uninstall capstone
+
 RUN pip install --upgrade git+https://github.com/binjitsu/binjitsu.git
+
 RUN pip3 install pycparser \
     "psutil>=3.1.0" \
     "python-ptrace>=0.8"
 
-# Install stuff from GitHub repos
+#-------------------------------------#
+# Install stuff from GitHub repos     #
+#-------------------------------------#
 RUN git clone https://github.com/aquynh/capstone /opt/capstone && \
     cd /opt/capstone && \
     git checkout -t origin/next && \
@@ -91,7 +106,6 @@ RUN git clone https://github.com/hellman/libformatstr.git /opt/libformatstr && \
 
 RUN git clone https://github.com/niklasb/libc-database /opt/libc-database
 
-# gdbinit files
 RUN git clone https://github.com/longld/peda.git /opt/peda
 RUN git clone https://github.com/zachriggle/pwndbg.git /opt/pwndbg
 RUN git clone https://github.com/hugsy/gef.git /opt/gef
