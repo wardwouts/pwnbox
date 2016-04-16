@@ -41,6 +41,7 @@ RUN apt-get install -y \
     socat \
     netcat \
     wget \
+    man-db \
     libglib2.0-dev \
     libc6:i386 \
     libncurses5:i386 \
