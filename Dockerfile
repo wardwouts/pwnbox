@@ -80,6 +80,7 @@ RUN git clone https://github.com/aquynh/capstone /opt/capstone && \
     cd bindings/python && \
     python setup.py install && \
     python3 setup.py install
+RUN rm -rf /opt/capstone
 
 RUN git clone https://github.com/unicorn-engine/unicorn /opt/unicorn && \
     cd /opt/unicorn && \
@@ -87,16 +88,19 @@ RUN git clone https://github.com/unicorn-engine/unicorn /opt/unicorn && \
     cd bindings/python && \
     python setup.py install && \
     python3 setup.py install
+RUN rm -rf /opt/unicorn
 
 RUN git clone https://github.com/radare/radare2.git /opt/radare2 && \
     cd /opt/radare2 && \
     git fetch --tags && \
     git checkout $(git describe --tags $(git rev-list --tags --max-count=1)) && \
     ./sys/install.sh 
+RUN rm -rf /opt/radare2
 
 RUN git clone https://github.com/sashs/Ropper.git /opt/ropper && \
     cd /opt/ropper && \
     python setup.py install
+RUN rm -rf /opt/ropper
 
 RUN git clone https://github.com/packz/ropeme.git /opt/ropeme && \
     sed -i 's/distorm/distorm3/g' /opt/ropeme/ropeme/gadgets.py
@@ -104,6 +108,7 @@ RUN git clone https://github.com/packz/ropeme.git /opt/ropeme && \
 RUN git clone https://github.com/hellman/libformatstr.git /opt/libformatstr && \
     cd /opt/libformatstr && \
     python setup.py install
+RUN rm -rf /opt/libformatstr
 
 RUN git clone https://github.com/niklasb/libc-database /opt/libc-database
 
