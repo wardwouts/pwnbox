@@ -4,7 +4,7 @@
 # Store your .gdbinit, .radare2rc, .vimrc, etc in a ./rc directory. The contents will be copied to
 # /root/ in the container.
 
-ESC="\e["
+ESC="\x1B["
 RESET=$ESC"39m"
 RED=$ESC"31m"
 GREEN=$ESC"32m"
@@ -16,17 +16,6 @@ if [[ -z ${1} ]]; then
 fi
 
 ctf_name=${1}
-
-# set default docker-machine env ctf if available
-if [[ ! -z `which docker-machine` ]]; then
-    docker-machine env ctf > /dev/null 2>&1
-    if [[ $? -eq 0 ]]; then
-        eval `docker-machine env ctf`
-    fi
-else
-    echo "Could not find docker-machine ctf"
-    exit 0
-fi
 
 # Create docker container and run in the background
 docker run -it \
@@ -66,5 +55,11 @@ chmod 755 ${ctf_name}-stop.sh
 docker exec ${ctf_name}-ctf mkdir /root/work
 
 # Get a shell
-echo -e "${GREEN}Let's pwn stuff!${RESET}"
-docker attach ${ctf_name}-ctf
+echo -e "${GREEN}                         ______               ${RESET}"
+echo -e "${GREEN}___________      ___________  /___________  __${RESET}"
+echo -e "${GREEN}___  __ \\_ | /| / /_  __ \\_  __ \\  __ \\_  |/_/${RESET}"
+echo -e "${GREEN}__  /_/ /_ |/ |/ /_  / / /  /_/ / /_/ /_>  <  ${RESET}"
+echo -e "${GREEN}_  .___/____/|__/ /_/ /_//_.___/\\____//_/|_|  ${RESET}"
+echo -e "${GREEN}/_/                           by superkojiman  ${RESET}"
+echo ""
+docker exec -it ${ctf_name}-ctf /bin/bash
