@@ -2,7 +2,7 @@
 # Dockerfile to build a container for binary reverse engineering #
 # and exploitation. Suitable for CTFs.                           #
 #                                                                #
-# To build: docker build -t superkojiman/pwnbox64 .              #
+# To build: docker build -t superkojiman/pwnbox                  #
 #----------------------------------------------------------------#
 
 FROM phusion/baseimage
@@ -40,6 +40,7 @@ RUN apt-get install -y \
     autoconf \
     socat \
     netcat \
+    nmap \
     wget \
     man-db \
     libglib2.0-dev \
