@@ -62,4 +62,4 @@ echo -e "${GREEN}__  /_/ /_ |/ |/ /_  / / /  /_/ / /_/ /_>  <  ${RESET}"
 echo -e "${GREEN}_  .___/____/|__/ /_/ /_//_.___/\\____//_/|_|  ${RESET}"
 echo -e "${GREEN}/_/                           by superkojiman  ${RESET}"
 echo ""
-docker exec -it ${ctf_name}-ctf /bin/bash
+docker attach ${ctf_name}-ctf
