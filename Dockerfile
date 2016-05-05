@@ -98,7 +98,6 @@ RUN git clone https://github.com/radare/radare2.git /opt/radare2 && \
     git fetch --tags && \
     git checkout $(git describe --tags $(git rev-list --tags --max-count=1)) && \
     ./sys/install.sh 
-RUN rm -rf /opt/radare2
 
 RUN git clone https://github.com/sashs/Ropper.git /opt/ropper && \
     cd /opt/ropper && \
