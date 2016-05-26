@@ -118,4 +118,6 @@ RUN git clone https://github.com/longld/peda.git /opt/peda
 RUN git clone https://github.com/zachriggle/pwndbg.git /opt/pwndbg
 RUN git clone https://github.com/hugsy/gef.git /opt/gef
 
+RUN git clone https://github.com/tmux-plugins/tmux-resurrect.git /opt/tmux-resurrect
+
 ENTRYPOINT ["/bin/bash"]
