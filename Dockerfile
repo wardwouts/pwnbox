@@ -23,13 +23,7 @@ RUN apt-get install -y \
     python3-dev \
     python-pip \
     python3-pip \
-    binutils-arm-linux-gnueabi \
-    binfmt-support \
-    binfmtc \
-    gcc-arm-linux-gnueabi \
-    g++-arm-linux-gnueabi \
-    libc6-armhf-cross \
-    gdb-multiarch \
+    default-jdk \
     nasm \
     vim \
     tmux \
@@ -63,35 +57,18 @@ RUN pip install \
     ropgadget \
     distorm3 \
     filebytes \
-    python-constraint
-
-RUN yes | pip uninstall capstone
-
-RUN pip install --upgrade git+https://github.com/binjitsu/binjitsu.git
-
-RUN pip3 install pycparser \
-    "psutil>=3.1.0" \
-    "python-ptrace>=0.8"
+    capstone \
+    python-constraint \
+    pwntools
 
 #-------------------------------------#
 # Install stuff from GitHub repos     #
 #-------------------------------------#
-RUN git clone https://github.com/aquynh/capstone /opt/capstone && \
-    cd /opt/capstone && \
-    git checkout -t origin/next && \
-    ./make.sh install && \
-    cd bindings/python && \
-    python setup.py install && \
-    python3 setup.py install
-RUN rm -rf /opt/capstone
-
-RUN git clone https://github.com/unicorn-engine/unicorn /opt/unicorn && \
-    cd /opt/unicorn && \
-    ./make.sh install && \
-    cd bindings/python && \
-    python setup.py install && \
-    python3 setup.py install
-RUN rm -rf /opt/unicorn
+RUN git clone https://gist.github.com/47e3a5ac99867e7f4e0d.git /opt/binstall && \
+    cd /opt/binstall && \
+    chmod 755 binstall.sh && \
+    ./binstall.sh amd64 && \
+    ./binstall.sh i386
 
 RUN git clone https://github.com/radare/radare2.git /opt/radare2 && \
     cd /opt/radare2 && \
@@ -112,12 +89,10 @@ RUN git clone https://github.com/hellman/libformatstr.git /opt/libformatstr && \
     python setup.py install
 RUN rm -rf /opt/libformatstr
 
+RUN git clone https://github.com/tmux-plugins/tmux-resurrect.git /opt/tmux-resurrect
 RUN git clone https://github.com/niklasb/libc-database /opt/libc-database
 
 RUN git clone https://github.com/longld/peda.git /opt/peda
-RUN git clone https://github.com/zachriggle/pwndbg.git /opt/pwndbg
 RUN git clone https://github.com/hugsy/gef.git /opt/gef
-
-RUN git clone https://github.com/tmux-plugins/tmux-resurrect.git /opt/tmux-resurrect
 
 ENTRYPOINT ["/bin/bash"]
