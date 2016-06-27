@@ -58,8 +58,9 @@ RUN pip install \
     distorm3 \
     filebytes \
     capstone \
-    python-constraint \
-    pwntools
+    python-constraint
+
+RUN pip install --upgrade git+https://github.com/binjitsu/binjitsu.git
 
 #-------------------------------------#
 # Install stuff from GitHub repos     #
