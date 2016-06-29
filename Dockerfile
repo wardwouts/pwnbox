@@ -37,6 +37,7 @@ RUN apt-get install -y \
     nmap \
     wget \
     man-db \
+    manpages-dev \
     libssl-dev \
     libffi-dev \
     libglib2.0-dev \
