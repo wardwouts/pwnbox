@@ -18,7 +18,10 @@ RUN apt-get update && apt-get -y upgrade
 #-------------------------------------#
 RUN apt-get install -y \
     build-essential \
+    gcc-multilib \
+    g++-multilib \
     gdb \
+    gdb-multiarch \
     python-dev \
     python3-dev \
     python-pip \
