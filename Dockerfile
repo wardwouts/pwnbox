@@ -5,7 +5,7 @@
 # To build: docker build -t superkojiman/pwnbox                  #
 #----------------------------------------------------------------#
 
-FROM phusion/baseimage
+FROM phusion/baseimage:0.9.19
 MAINTAINER superkojiman@techorganic.com
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -41,6 +41,7 @@ RUN apt-get install -y \
     wget \
     man-db \
     manpages-dev \
+    libini-config-dev \
     libssl-dev \
     libffi-dev \
     libglib2.0-dev \
@@ -93,6 +94,10 @@ RUN git clone https://github.com/hellman/libformatstr.git /opt/libformatstr && \
     cd /opt/libformatstr && \
     python setup.py install
 RUN rm -rf /opt/libformatstr
+
+RUN git clone https://github.com/zardus/preeny.git /opt/preeny && \
+    cd /opt/preeny && \
+    make
 
 RUN git clone https://github.com/tmux-plugins/tmux-resurrect.git /opt/tmux-resurrect
 RUN git clone https://github.com/niklasb/libc-database /opt/libc-database
