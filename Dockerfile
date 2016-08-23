@@ -27,6 +27,7 @@ RUN apt-get install -y \
     python-pip \
     python3-pip \
     default-jdk \
+    net-tools \
     nasm \
     vim \
     tmux \
@@ -83,7 +84,8 @@ RUN git clone https://github.com/radare/radare2.git /opt/radare2 && \
     cd /opt/radare2 && \
     git fetch --tags && \
     git checkout $(git describe --tags $(git rev-list --tags --max-count=1)) && \
-    ./sys/install.sh 
+    ./sys/install.sh  && \
+    make symstall
 
 RUN git clone https://github.com/sashs/Ropper.git /opt/ropper && \
     cd /opt/ropper && \
