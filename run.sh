@@ -20,9 +20,9 @@ ctf_name=${1}
 # Create docker container and run in the background
 docker run -it \
     -d \
-    -h ${ctf_name}-ctf \
+    -h ${ctf_name} \
     --security-opt seccomp:unconfined \
-    --name ${ctf_name}-ctf \
+    --name ${ctf_name} \
     superkojiman/pwnbox
 
 # Tar config files in rc and extract it into the container
@@ -37,7 +37,7 @@ if [[ -d rc ]]; then
         fi
     done
     cd - > /dev/null 2>&1
-    cat rc/rc.tar | docker cp - ${ctf_name}-ctf:/root/
+    cat rc/rc.tar | docker cp - ${ctf_name}:/root/
 else
     echo -e "${RED}No rc directory found. Nothing to copy to container.${RESET}"
 fi
@@ -45,14 +45,14 @@ fi
 # Create stop/rm script for container
 cat << EOF > ${ctf_name}-stop.sh
 #!/bin/bash
-docker stop ${ctf_name}-ctf
-docker rm ${ctf_name}-ctf
+docker stop ${ctf_name}
+docker rm ${ctf_name}
 rm -f ${ctf_name}-stop.sh
 EOF
 chmod 755 ${ctf_name}-stop.sh
 
 # Create a workdir for this CTF
-docker exec ${ctf_name}-ctf mkdir /root/work
+docker exec ${ctf_name} mkdir /root/work
 
 # Get a shell
 echo -e "${GREEN}                         ______               ${RESET}"
@@ -62,4 +62,5 @@ echo -e "${GREEN}__  /_/ /_ |/ |/ /_  / / /  /_/ / /_/ /_>  <  ${RESET}"
 echo -e "${GREEN}_  .___/____/|__/ /_/ /_//_.___/\\____//_/|_|  ${RESET}"
 echo -e "${GREEN}/_/                           by superkojiman  ${RESET}"
 echo ""
-docker attach ${ctf_name}-ctf
+#docker exec -it ${ctf_name} /usr/bin/tmux
+docker attach ${ctf_name}
