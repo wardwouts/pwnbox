@@ -65,7 +65,10 @@ RUN pip install \
     capstone \
     python-constraint
 
-RUN pip install --upgrade git+https://github.com/binjitsu/binjitsu.git
+#RUN pip install --upgrade git+https://github.com/binjitsu/binjitsu.git
+
+# instlal pwntools 3
+RUN pip install --upgrade pwntools
 
 #-------------------------------------#
 # Install stuff from GitHub repos     #
