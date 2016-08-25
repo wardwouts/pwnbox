@@ -95,6 +95,11 @@ RUN rm -rf /opt/ropper
 RUN git clone https://github.com/packz/ropeme.git /opt/ropeme && \
     sed -i 's/distorm/distorm3/g' /opt/ropeme/ropeme/gadgets.py
 
+# install rp++
+mkdir /opt/rp
+wget https://github.com/downloads/0vercl0k/rp/rp-lin-x64 -P /opt/rp
+wget https://github.com/downloads/0vercl0k/rp/rp-lin-x86 -P /opt/rp
+
 RUN git clone https://github.com/hellman/libformatstr.git /opt/libformatstr && \
     cd /opt/libformatstr && \
     python setup.py install
