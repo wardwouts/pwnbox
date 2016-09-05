@@ -40,7 +40,6 @@ RUN apt-get install -y \
     netcat \
     nmap \
     wget \
-    gobuster \
     exiftool \
     virtualenvwrapper \
     man-db \
