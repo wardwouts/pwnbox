@@ -69,10 +69,10 @@ RUN pip install \
     python-constraint
 
 # setup angr virtualenv
-RUN source /etc/bash_completion/virtualenv
-RUN mkvirtualenv angr
-RUN pip install angr
-RUN deactivate
+RUN bash -c 'source /etc/bash_completion.d/virtualenvwrapper && \
+    mkvirtualenv angr && \
+    pip install angr && \
+    deactivate'
 
 # instlal pwntools 3
 RUN pip install --upgrade pwntools
