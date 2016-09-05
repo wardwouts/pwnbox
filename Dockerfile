@@ -40,6 +40,9 @@ RUN apt-get install -y \
     netcat \
     nmap \
     wget \
+    gobuster \
+    exiftool \
+    virtualenvwrapper \
     man-db \
     manpages-dev \
     libini-config-dev \
@@ -66,7 +69,11 @@ RUN pip install \
     capstone \
     python-constraint
 
-#RUN pip install --upgrade git+https://github.com/binjitsu/binjitsu.git
+# setup angr virtualenv
+RUN source /etc/bash_completion/virtualenv
+RUN mkvirtualenv angr
+RUN pip install angr
+RUN deactivate
 
 # instlal pwntools 3
 RUN pip install --upgrade pwntools
