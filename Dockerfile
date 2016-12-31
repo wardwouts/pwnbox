@@ -86,6 +86,7 @@ RUN git clone https://gist.github.com/47e3a5ac99867e7f4e0d.git /opt/binstall && 
     ./binstall.sh amd64 && \
     ./binstall.sh i386
 
+# install radrare2
 RUN git clone https://github.com/radare/radare2.git /opt/radare2 && \
     cd /opt/radare2 && \
     git fetch --tags && \
@@ -93,32 +94,45 @@ RUN git clone https://github.com/radare/radare2.git /opt/radare2 && \
     ./sys/install.sh  && \
     make symstall
 
+# install ropper
 RUN git clone https://github.com/sashs/Ropper.git /opt/ropper && \
     cd /opt/ropper && \
     python setup.py install
 RUN rm -rf /opt/ropper
 
+# install ropeme
 RUN git clone https://github.com/packz/ropeme.git /opt/ropeme && \
     sed -i 's/distorm/distorm3/g' /opt/ropeme/ropeme/gadgets.py
+
+# install villoc
+RUN git clone https://github.com/wapiflapi/villoc.git /opt/villoc 
 
 # install rp++
 RUN mkdir /opt/rp
 RUN wget https://github.com/downloads/0vercl0k/rp/rp-lin-x64 -P /opt/rp
 RUN wget https://github.com/downloads/0vercl0k/rp/rp-lin-x86 -P /opt/rp
 
+# install libformatstr
 RUN git clone https://github.com/hellman/libformatstr.git /opt/libformatstr && \
     cd /opt/libformatstr && \
     python setup.py install
 RUN rm -rf /opt/libformatstr
 
+# install preeny
 RUN git clone https://github.com/zardus/preeny.git /opt/preeny && \
     cd /opt/preeny && \
     make
 
+# install tmux-resurrect
 RUN git clone https://github.com/tmux-plugins/tmux-resurrect.git /opt/tmux-resurrect
+
+# install libc-database
 RUN git clone https://github.com/niklasb/libc-database /opt/libc-database
 
+# install peda
 RUN git clone https://github.com/longld/peda.git /opt/peda
+
+# install gef
 RUN git clone https://github.com/hugsy/gef.git /opt/gef
 
 ENTRYPOINT ["/bin/bash"]
