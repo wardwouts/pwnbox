@@ -135,4 +135,9 @@ RUN git clone https://github.com/longld/peda.git /opt/peda
 # install gef
 RUN git clone https://github.com/hugsy/gef.git /opt/gef
 
+# install pwndbg
+RUN git clone https://github.com/pwndbg/pwndbg /opt/pwndbg && \
+    cd /opt/pwndbg && \
+    ./setup.sh
+
 ENTRYPOINT ["/bin/bash"]
