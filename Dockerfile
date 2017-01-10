@@ -17,6 +17,7 @@ RUN apt-get update && apt-get -y upgrade
 # Install packages from Ubuntu repos  #
 #-------------------------------------#
 RUN apt-get install -y \
+    sudo \
     build-essential \
     gcc-multilib \
     g++-multilib \
