@@ -42,6 +42,8 @@ RUN apt-get install -y \
     nmap \
     wget \
     exiftool \
+    squashfs-tools \
+    unzip \
     virtualenvwrapper \
     man-db \
     manpages-dev \
@@ -66,7 +68,6 @@ RUN pip install \
     ropgadget \
     distorm3 \
     filebytes \
-    capstone \
     python-constraint
 
 # setup angr virtualenv
@@ -81,6 +82,15 @@ RUN pip install --upgrade pwntools
 #-------------------------------------#
 # Install stuff from GitHub repos     #
 #-------------------------------------#
+# install capstone
+RUN git clone https://github.com/aquynh/capstone.git /opt/capstone && \
+    cd /opt/capstone && \
+    ./make.sh && \
+    ./make.sh install  && \
+    cd bindings/python && \
+    make install && \
+    make install3 
+
 RUN git clone https://gist.github.com/47e3a5ac99867e7f4e0d.git /opt/binstall && \
     cd /opt/binstall && \
     chmod 755 binstall.sh && \
@@ -105,13 +115,16 @@ RUN rm -rf /opt/ropper
 RUN git clone https://github.com/packz/ropeme.git /opt/ropeme && \
     sed -i 's/distorm/distorm3/g' /opt/ropeme/ropeme/gadgets.py
 
-# install villoc
-RUN git clone https://github.com/wapiflapi/villoc.git /opt/villoc 
-
 # install rp++
 RUN mkdir /opt/rp
 RUN wget https://github.com/downloads/0vercl0k/rp/rp-lin-x64 -P /opt/rp
 RUN wget https://github.com/downloads/0vercl0k/rp/rp-lin-x86 -P /opt/rp
+
+# install retargetable decompiler scripts
+RUN git clone https://github.com/s3rvac/retdec-sh.git /opt/retdec-sh
+
+# install villoc
+RUN git clone https://github.com/wapiflapi/villoc.git /opt/villoc 
 
 # install libformatstr
 RUN git clone https://github.com/hellman/libformatstr.git /opt/libformatstr && \
