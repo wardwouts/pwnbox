@@ -2,6 +2,8 @@
 # Dockerfile to build a container for binary reverse engineering #
 # and exploitation. Suitable for CTFs.                           #
 #                                                                #
+# See https://github.com/superkojiman/pwnbox for details.        #
+#                                                                #
 # To build: docker build -t superkojiman/pwnbox                  #
 #----------------------------------------------------------------#
 
@@ -30,6 +32,7 @@ RUN apt-get install -y \
     default-jdk \
     net-tools \
     nasm \
+    cmake \
     vim \
     tmux \
     git \
@@ -45,6 +48,7 @@ RUN apt-get install -y \
     squashfs-tools \
     unzip \
     virtualenvwrapper \
+    upx-ucl \
     man-db \
     manpages-dev \
     libini-config-dev \
