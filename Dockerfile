@@ -29,6 +29,7 @@ RUN apt-get install -y \
     python3-dev \
     python-pip \
     python3-pip \
+    ipython \
     default-jdk \
     net-tools \
     nasm \
