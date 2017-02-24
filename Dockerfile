@@ -52,6 +52,8 @@ RUN apt-get install -y \
     upx-ucl \
     man-db \
     manpages-dev \
+    libtool-bin \
+    bison \
     libini-config-dev \
     libssl-dev \
     libffi-dev \
@@ -83,6 +85,9 @@ RUN bash -c 'source /etc/bash_completion.d/virtualenvwrapper && \
 
 # install pwntools 3
 RUN pip install --upgrade pwntools
+
+# install docopt for xortool
+RUN pip install docopt
 
 #-------------------------------------#
 # Install stuff from GitHub repos     #
@@ -141,6 +146,11 @@ RUN rm -rf /opt/libformatstr
 RUN git clone https://github.com/zardus/preeny.git /opt/preeny && \
     cd /opt/preeny && \
     make
+
+# install xortool
+RUN git clone https://github.com/hellman/xortool.git /opt/xortool && \
+    cd /opt/xortool && \
+    python setup.py install
 
 # install tmux-resurrect
 RUN git clone https://github.com/tmux-plugins/tmux-resurrect.git /opt/tmux-resurrect
