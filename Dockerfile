@@ -75,6 +75,7 @@ RUN pip install \
     ropgadget \
     distorm3 \
     filebytes \
+    r2pipe \
     python-constraint
 
 # setup angr virtualenv
