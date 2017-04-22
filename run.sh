@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Run superkojiman/pwnbox container in docker. 
+# Run superkojiman/pwnbox container in docker.
 # Store your .gdbinit, .radare2rc, .vimrc, etc in a ./rc directory. The contents will be copied to
 # /root/ in the container.
 
@@ -18,9 +18,10 @@ fi
 ctf_name=${1}
 
 # Create docker container and run in the background
+# Add this if you need to modify anything in /proc:  --privileged 
 docker run -it \
-    -d \
     -h ${ctf_name} \
+    -d \
     --security-opt seccomp:unconfined \
     --name ${ctf_name} \
     superkojiman/pwnbox
@@ -31,13 +32,14 @@ if [[ -d rc ]]; then
     if [[ -f rc.tar ]]; then
         rm -f rc.tar
     fi
-    for i in .* *; do
+    for i in .*; do
         if [[ ! ${i} == "." && ! ${i} == ".." ]]; then
             tar rf rc.tar ${i}
         fi
     done
     cd - > /dev/null 2>&1
     cat rc/rc.tar | docker cp - ${ctf_name}:/root/
+    rm -f rc/rc.tar
 else
     echo -e "${RED}No rc directory found. Nothing to copy to container.${RESET}"
 fi
@@ -62,5 +64,4 @@ echo -e "${GREEN}__  /_/ /_ |/ |/ /_  / / /  /_/ / /_/ /_>  <  ${RESET}"
 echo -e "${GREEN}_  .___/____/|__/ /_/ /_//_.___/\\____//_/|_|  ${RESET}"
 echo -e "${GREEN}/_/                           by superkojiman  ${RESET}"
 echo ""
-#docker exec -it ${ctf_name} /usr/bin/tmux
 docker attach ${ctf_name}
