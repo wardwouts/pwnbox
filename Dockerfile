@@ -34,6 +34,7 @@ RUN apt-get install -y \
     net-tools \
     nasm \
     cmake \
+    rubygems \
     vim \
     tmux \
     git \
@@ -169,5 +170,8 @@ RUN git clone https://github.com/hugsy/gef.git /opt/gef
 RUN git clone https://github.com/pwndbg/pwndbg.git /opt/pwndbg && \
     cd /opt/pwndbg && \
     ./setup.sh
+
+# install one_gadget
+RUN gem install one_gadget
 
 ENTRYPOINT ["/bin/bash"]
