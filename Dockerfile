@@ -46,6 +46,7 @@ RUN apt-get install -y \
     netcat \
     nmap \
     wget \
+    tcpdump \
     exiftool \
     squashfs-tools \
     unzip \
@@ -170,6 +171,11 @@ RUN git clone https://github.com/hugsy/gef.git /opt/gef
 RUN git clone https://github.com/pwndbg/pwndbg.git /opt/pwndbg && \
     cd /opt/pwndbg && \
     ./setup.sh
+
+# install libseccomp
+RUN git clone https://github.com/seccomp/libseccomp.git /opt/libseccomp && \
+    cd /opt/libseccomp && \
+    ./autogen.sh && ./configure && make && make install 
 
 # install one_gadget
 RUN gem install one_gadget
