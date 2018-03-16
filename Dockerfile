@@ -78,6 +78,7 @@ RUN pip install \
     distorm3 \
     filebytes \
     r2pipe \
+    scapy \
     python-constraint
 
 # setup angr virtualenv
