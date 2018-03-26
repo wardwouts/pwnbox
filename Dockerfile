@@ -178,6 +178,11 @@ RUN git clone https://github.com/seccomp/libseccomp.git /opt/libseccomp && \
     cd /opt/libseccomp && \
     ./autogen.sh && ./configure && make && make install 
 
+# install PinCTF
+RUN git clone https://github.com/ChrisTheCoolHut/PinCTF.git /opt/PinCTF && \
+    cd /opt/PinCTF && \
+    ./installPin.sh 
+
 # install one_gadget
 RUN gem install one_gadget
 
