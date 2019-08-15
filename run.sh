@@ -38,17 +38,20 @@ fi
 
 # Originally in following command:
 # --security-opt seccomp:unconfined \
-# not a good idea. I think the PTRACE capability will suffice for now
+# not a good idea. I think the SYS_PTRACE capability will suffice for now
+# see also http://man7.org/linux/man-pages/man7/capabilities.7.html
 $DOCKER_COMMAND run -it \
     -h ${ctf_name} \
-    --cap-add=CAP_PTRACE \
+    --cap-add=SYS_PTRACE \
     -d \
     --name ${ctf_name} \
     ${DOCKER_REPO_PREFIX}/pwnbox
 
-# Tar config files in rc and extract it into the container
+# Copy files in rc to container
 if [[ -d rc ]]; then
-    tar -C rc -cf - | $DOCKER_COMMAND cp - ${ctf_name}:/root/
+    if [[ $(find rc | wc -l) -gt 1 ]]; then
+        $DOCKER_COMMAND cp rc/. ${ctf_name}:/root/
+    fi
 else
     echo -e "${RED}No rc directory found. Nothing to copy to container.${RESET}"
 fi
@@ -64,4 +67,6 @@ echo -e "${GREEN}__  /_/ /_ |/ |/ /_  / / /  /_/ / /_/ /_>  <  ${RESET}"
 echo -e "${GREEN}_  .___/____/|__/ /_/ /_//_.___/\\____//_/|_|  ${RESET}"
 echo -e "${GREEN}/_/                           by superkojiman  ${RESET}"
 echo ""
+echo -e "${GREEN}to detach container without stopping it type: ${RESET}"
+echo -e "${GREEN}CTRL-p CTRL-q                                 ${RESET}"
 $DOCKER_COMMAND attach ${ctf_name}
