@@ -146,6 +146,11 @@ RUN git clone https://github.com/hellman/libformatstr.git /opt/libformatstr && \
     python setup.py install && \
     rm -rf /opt/libformatstr
 
+# install libseccomp
+RUN git clone https://github.com/seccomp/libseccomp.git /opt/libseccomp && \
+    cd /opt/libseccomp && \
+    ./autogen.sh && ./configure && make && make install
+
 # install preeny
 RUN git clone https://github.com/zardus/preeny.git /opt/preeny && \
     cd /opt/preeny && \
@@ -172,11 +177,6 @@ RUN git clone https://github.com/hugsy/gef.git /opt/gef
 RUN git clone https://github.com/pwndbg/pwndbg.git /opt/pwndbg && \
     cd /opt/pwndbg && \
     ./setup.sh
-
-# install libseccomp
-RUN git clone https://github.com/seccomp/libseccomp.git /opt/libseccomp && \
-    cd /opt/libseccomp && \
-    ./autogen.sh && ./configure && make && make install 
 
 # install PinCTF
 RUN git clone https://github.com/ChrisTheCoolHut/PinCTF.git /opt/PinCTF && \
