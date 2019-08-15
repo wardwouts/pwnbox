@@ -3,7 +3,7 @@
 set -u # Throw errors when unset variables are used
 set -e # Exit on error
 
-# Run superkojiman/pwnbox container in docker.
+# Run wardwouts/pwnbox container in docker.
 # Store your .gdbinit, .radare2rc, .vimrc, etc in a ./rc directory. The contents will be copied to
 # /root/ in the container.
 
@@ -12,7 +12,7 @@ if [[ -z "${DOCKER_COMMAND}" ]]; then
 fi
 
 if [[ -z "${DOCKER_REPO_PREFIX}" ]]; then
-    DOCKER_REPO_PREFIX=superkojiman
+    DOCKER_REPO_PREFIX=wardwouts
 fi
 
 
