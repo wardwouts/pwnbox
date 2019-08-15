@@ -7,8 +7,8 @@
 # To build: docker build -t superkojiman/pwnbox                  #
 #----------------------------------------------------------------#
 
-FROM phusion/baseimage:0.9.19
-MAINTAINER superkojiman@techorganic.com
+FROM phusion/baseimage:latest
+MAINTAINER ward@wouts.nl
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -111,7 +111,7 @@ RUN git clone https://gist.github.com/47e3a5ac99867e7f4e0d.git /opt/binstall && 
     ./binstall.sh amd64 && \
     ./binstall.sh i386
 
-# install radrare2
+# install radare2
 RUN git clone https://github.com/radare/radare2.git /opt/radare2 && \
     cd /opt/radare2 && \
     git fetch --tags && \
@@ -181,7 +181,7 @@ RUN git clone https://github.com/seccomp/libseccomp.git /opt/libseccomp && \
 # install PinCTF
 RUN git clone https://github.com/ChrisTheCoolHut/PinCTF.git /opt/PinCTF && \
     cd /opt/PinCTF && \
-    ./installPin.sh 
+    ./installPin.sh
 
 # install one_gadget
 RUN gem install one_gadget
