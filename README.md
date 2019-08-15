@@ -2,7 +2,7 @@
 Pwnbox is a Docker container with tools for binary reverse engineering and exploitation. It's primarily geared towards Capture The Flag competitions.
 
 ### Installation
-You can grab the container from Docker Hub: `docker pull superkojiman/pwnbox`
+You can grab the container from Docker Hub: `docker pull wardwouts/pwnbox`
  1. Make sure you have Docker installed. For OS X users, you'll need to create a Docker machine. Pick one depending on your hypervisor:
 
         # VMware Fusion
@@ -18,7 +18,7 @@ You can grab the container from Docker Hub: `docker pull superkojiman/pwnbox`
             --virtualbox-no-share ctf
 
  1. Optional: Create a ./rc directory. Your custom configuration files in $HOME go here. Eg: .gdbinit, .radare2rc, .bashrc, .vimrc, etc. The contents of rc gets copied into /root on the container.
- 1. Get the `run.sh` script from [https://raw.githubusercontent.com/superkojiman/pwnbox/master/run.sh](https://raw.githubusercontent.com/superkojiman/pwnbox/master/run.sh).
+ 1. Get the `run.sh` script from [https://github.com/wardwouts/pwnbox/blob/master/run.sh](https://github.com/wardwouts/pwnbox/blob/master/run.sh).
  1. Execute `run.sh <ctfname>` script which creates a container named `<ctfname>`. Eg:
 
         $ ./run.sh defcon
