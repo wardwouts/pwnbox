@@ -1,8 +1,20 @@
 #!/usr/bin/env bash
 
+set -u # Throw errors when unset variables are used
+set -e # Exit on error
+
 # Run superkojiman/pwnbox container in docker.
 # Store your .gdbinit, .radare2rc, .vimrc, etc in a ./rc directory. The contents will be copied to
 # /root/ in the container.
+
+if [[ -z "${DOCKER_COMMAND}" ]]; then
+    DOCKER_COMMAND=docker
+fi
+
+if [[ -z "${DOCKER_REPO_PREFIX}" ]]; then
+    DOCKER_REPO_PREFIX=superkojiman
+fi
+
 
 ESC="\x1B["
 RESET=$ESC"39m"
@@ -10,51 +22,39 @@ RED=$ESC"31m"
 GREEN=$ESC"32m"
 BLUE=$ESC"34m"
 
-if [[ -z ${1} ]]; then
+if [[ $# != 1 ]]; then
+    ctf_name=${cdj##*\/}
+else
+    ctf_name="${1}"
+fi
+
+if [[ -z "$ctf_name" ]]; then
     echo -e "${RED}Missing argument CTF name.${RESET}"
     exit 0
 fi
 
-ctf_name=${1}
-
 # Create docker container and run in the background
-# Add this if you need to modify anything in /proc:  --privileged 
-docker run -it \
+# Add this if you need to modify anything in /proc: --privileged
+
+# Originally in following command:
+# --security-opt seccomp:unconfined \
+# not a good idea. I think the PTRACE capability will suffice for now
+$DOCKER_COMMAND run -it \
     -h ${ctf_name} \
+    --cap-add=CAP_PTRACE \
     -d \
-    --security-opt seccomp:unconfined \
     --name ${ctf_name} \
-    superkojiman/pwnbox
+    ${DOCKER_REPO_PREFIX}/pwnbox
 
 # Tar config files in rc and extract it into the container
 if [[ -d rc ]]; then
-    cd rc
-    if [[ -f rc.tar ]]; then
-        rm -f rc.tar
-    fi
-    for i in .*; do
-        if [[ ! ${i} == "." && ! ${i} == ".." ]]; then
-            tar rf rc.tar ${i}
-        fi
-    done
-    cd - > /dev/null 2>&1
-    cat rc/rc.tar | docker cp - ${ctf_name}:/root/
-    rm -f rc/rc.tar
+    tar -C rc -cf - | $DOCKER_COMMAND cp - ${ctf_name}:/root/
 else
     echo -e "${RED}No rc directory found. Nothing to copy to container.${RESET}"
 fi
 
-# Create stop/rm script for container
-cat << EOF > ${ctf_name}-stop.sh
-#!/bin/bash
-docker stop ${ctf_name}
-docker rm ${ctf_name}
-rm -f ${ctf_name}-stop.sh
-EOF
-chmod 755 ${ctf_name}-stop.sh
-
 # Create a workdir for this CTF
-docker exec ${ctf_name} mkdir /root/work
+$DOCKER_COMMAND exec ${ctf_name} mkdir /root/work
 
 # Get a shell
 echo -e "${GREEN}                         ______               ${RESET}"
@@ -64,4 +64,4 @@ echo -e "${GREEN}__  /_/ /_ |/ |/ /_  / / /  /_/ / /_/ /_>  <  ${RESET}"
 echo -e "${GREEN}_  .___/____/|__/ /_/ /_//_.___/\\____//_/|_|  ${RESET}"
 echo -e "${GREEN}/_/                           by superkojiman  ${RESET}"
 echo ""
-docker attach ${ctf_name}
+$DOCKER_COMMAND attach ${ctf_name}
