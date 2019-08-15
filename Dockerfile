@@ -122,29 +122,29 @@ RUN git clone https://github.com/radare/radare2.git /opt/radare2 && \
 # install ropper
 RUN git clone https://github.com/sashs/Ropper.git /opt/ropper && \
     cd /opt/ropper && \
-    python setup.py install
-RUN rm -rf /opt/ropper
+    python setup.py install && \
+    rm -rf /opt/ropper
 
 # install ropeme
 RUN git clone https://github.com/packz/ropeme.git /opt/ropeme && \
     sed -i 's/distorm/distorm3/g' /opt/ropeme/ropeme/gadgets.py
 
 # install rp++
-RUN mkdir /opt/rp
-RUN wget https://github.com/downloads/0vercl0k/rp/rp-lin-x64 -P /opt/rp
-RUN wget https://github.com/downloads/0vercl0k/rp/rp-lin-x86 -P /opt/rp
+RUN mkdir /opt/rp && \
+    wget https://github.com/downloads/0vercl0k/rp/rp-lin-x64 -P /opt/rp && \
+    wget https://github.com/downloads/0vercl0k/rp/rp-lin-x86 -P /opt/rp
 
 # install retargetable decompiler scripts
 RUN git clone https://github.com/s3rvac/retdec-sh.git /opt/retdec-sh
 
 # install villoc
-RUN git clone https://github.com/wapiflapi/villoc.git /opt/villoc 
+RUN git clone https://github.com/wapiflapi/villoc.git /opt/villoc
 
 # install libformatstr
 RUN git clone https://github.com/hellman/libformatstr.git /opt/libformatstr && \
     cd /opt/libformatstr && \
-    python setup.py install
-RUN rm -rf /opt/libformatstr
+    python setup.py install && \
+    rm -rf /opt/libformatstr
 
 # install preeny
 RUN git clone https://github.com/zardus/preeny.git /opt/preeny && \
