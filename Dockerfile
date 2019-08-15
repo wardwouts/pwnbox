@@ -12,6 +12,9 @@ MAINTAINER ward@wouts.nl
 
 ENV DEBIAN_FRONTEND noninteractive
 
+# Set LC_ALL to a safe value so pip doesn't break
+ENV LC_ALL C
+
 RUN dpkg --add-architecture i386
 RUN apt-get update && apt-get -y upgrade
 
@@ -101,15 +104,12 @@ RUN git clone https://github.com/aquynh/capstone.git /opt/capstone && \
     cd /opt/capstone && \
     ./make.sh && \
     ./make.sh install  && \
-    cd bindings/python && \
-    make install && \
-    make install3 
+    pip install capstone && \
+    pip3 install capstone
 
-RUN git clone https://gist.github.com/47e3a5ac99867e7f4e0d.git /opt/binstall && \
-    cd /opt/binstall && \
-    chmod 755 binstall.sh && \
-    ./binstall.sh amd64 && \
-    ./binstall.sh i386
+
+RUN apt-get install -y \
+    binutils
 
 # install radare2
 RUN git clone https://github.com/radare/radare2.git /opt/radare2 && \
