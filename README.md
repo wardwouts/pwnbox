@@ -52,7 +52,7 @@ You can grab the container from Docker Hub: `docker pull wardwouts/pwnbox`
         DOCKER_COMMAND=podman
 
 ### Limitations
- 1. If you need to edit anything in /proc, you must edit `run.sh` to use the `--privileged` option to `docker` instead of `--security-opt seccomp:unconfined`.
+ 1. If you need to edit anything in /proc, you must edit `run.sh` to use the `--privileged` option to `docker` instead of `--cap-add=SYS_PTRACE`.
  1. The container is designed to be isolated so no directories are mounted from the host. This allows you to have multiple containers hosting files from different CTFs.
 
 ### Go forth, and CTF
