@@ -16,12 +16,12 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV LC_ALL C
 
 RUN dpkg --add-architecture i386
-RUN apt-get update && apt-get -y upgrade
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confnew" upgrade -y
 
 #-------------------------------------#
 # Install packages from Ubuntu repos  #
 #-------------------------------------#
-RUN apt-get install -y \
+RUN DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confnew" install -y \
     sudo \
     build-essential \
     gcc-multilib \
@@ -108,7 +108,7 @@ RUN git clone https://github.com/aquynh/capstone.git /opt/capstone && \
     pip3 install capstone
 
 
-RUN apt-get install -y \
+RUN DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confnew" install -y \
     binutils
 
 # install radare2
