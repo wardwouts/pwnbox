@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+
+# Run wardwouts/pwnbox container in docker.
+# Store your .gdbinit, .radare2rc, .vimrc, etc in a ./rc directory.
+# The contents will be copied to /root/ in the container.
+
+set -u # Throw errors when unset variables are used
+set -e # Exit on error
+set -o pipefail
+
+variable-is-set() {
+    declare -p "$1" &>/dev/null
+}
+
+banner() {
+    # Get a shell
+    echo -e "${GREEN}                         ______               ${RESET}"
+    echo -e "${GREEN}___________      ___________  /___________  __${RESET}"
+    echo -e "${GREEN}___  __ \\_ | /| / /_  __ \\_  __ \\  __ \\_  |/_/${RESET}"
+    echo -e "${GREEN}__  /_/ /_ |/ |/ /_  / / /  /_/ / /_/ /_>  <  ${RESET}"
+    echo -e "${GREEN}_  .___/____/|__/ /_/ /_//_.___/\\____//_/|_|  ${RESET}"
+    echo -e "${GREEN}/_/                originally by superkojiman  ${RESET}"
+    echo -e "${GREEN}/_/                       forked by wardwouts  ${RESET}"
+    echo ""
+    echo -e "${GREEN}To detach container without stopping it type: ${RESET}"
+    echo -e "${GREEN}CTRL-p CTRL-q                                 ${RESET}"
+}
+
+variable-is-set "DOCKER_COMMAND" || DOCKER_COMMAND=docker
+variable-is-set "DOCKER_REPO_PREFIX" || DOCKER_REPO_PREFIX=wardwouts
+
+ESC="\x1B["
+RESET=$ESC"39m"
+RED=$ESC"31m"
+GREEN=$ESC"32m"
+BLUE=$ESC"34m"
+
+if [[ $# != 1 ]]; then
+    if ( variable-is-set "cdj" ); then
+        echo "CTF Name from env: ${cdj##*/}"
+        ctf_name="${cdj##*/}"
+        mount="${cdj}"
+    else
+        pwd="$(pwd)"
+        echo "CTF Name from path: ${pwd##*/}"
+        ctf_name="${pwd##*/}"
+        mount="$(pwd)"
+    fi
+else
+    echo "CTF Name from argument: ${1}"
+    ctf_name="${1}"
+    mount="$(pwd)"
+fi
+
+# Create docker container and run in the background
+# Add this if you need to modify anything in /proc: --privileged
+#
+# Originally with the following in command:
+# --security-opt seccomp:unconfined \
+# not a good idea IMO. I think the SYS_PTRACE capability will suffice for now
+# see also http://man7.org/linux/man-pages/man7/capabilities.7.html
+create_container() {
+echo "Creating container"
+    $DOCKER_COMMAND run -it \
+        -h ${ctf_name} \
+        --cap-add=SYS_PTRACE \
+        -d \
+        -v ${mount}:/root/work \
+        --name ${ctf_name} \
+        ${DOCKER_REPO_PREFIX}/pwnbox
+
+    # Copy files in rc to container
+    if [[ -d rc ]]; then
+        if [[ $(find rc | wc -l) -gt 1 ]]; then
+            $DOCKER_COMMAND cp rc/. ${ctf_name}:/root/
+        fi
+    else
+        echo -e "${RED}No rc directory found. Nothing to copy to container.${RESET}"
+    fi
+}
+
+start_container() {
+echo "Starting container"
+    banner
+    $DOCKER_COMMAND start -i ${ctf_name}
+}
+
+attach_container() {
+    banner
+    $DOCKER_COMMAND attach ${ctf_name}
+}
+
+# Check if container exists
+if ( docker ps -a -f name="$ctf_name" | grep -Eq "$ctf_name\$"); then
+    # Check if it's running
+    state=$($DOCKER_COMMAND inspect --format "{{.State.Running}}" "$ctf_name" 2>/dev/null)
+    if [[ "$state" == "false" ]]; then
+        start_container
+    else
+        attach_container
+    fi
+else
+    create_container
+    attach_container
+fi

@@ -3,24 +3,10 @@ Pwnbox is a Docker container with tools for binary reverse engineering and explo
 
 ### Installation
 You can grab the container from Docker Hub: `docker pull wardwouts/pwnbox`
- 1. Make sure you have Docker installed. For OS X users, you'll need to create a Docker machine. Pick one depending on your hypervisor:
-
-        # VMware Fusion
-        docker-machine create --driver vmwarefusion \
-            --vmwarefusion-disk-size 4000 \
-            --vmwarefusion-memory-size 1000 \
-            --vmwarefusion-no-share ctf
-
-        # VirtualBox
-        docker-machine create --driver virtualbox \
-            --virtualbox-disk-size 4000 \
-            --virtualbox-memory 1000 \
-            --virtualbox-no-share ctf
-
+ 1. Make sure you have Docker installed.
  1. Optional: Create a ./rc directory. Your custom configuration files in $HOME go here. Eg: .gdbinit, .radare2rc, .bashrc, .vimrc, etc. The contents of rc gets copied into /root on the container.
- 1. Get the `run.sh` script from [https://github.com/wardwouts/pwnbox/blob/master/run.sh](https://github.com/wardwouts/pwnbox/blob/master/run.sh).
- 1. Execute `run.sh <ctfname>` script which creates a container named `<ctfname>`. Eg:
-
+ 1. Get the `pwnbox` script from [https://github.com/wardwouts/pwnbox/blob/master/run.sh](https://github.com/wardwouts/pwnbox/blob/master/pwnbox).
+ 1. Execute `pwnbox <ctfname>` script which creates a container named `<ctfname>`. Eg:
         $ ./run.sh defcon
         f383e644c0e2504f30487f1d658d8b61a66fca2bdb961fabb0277b05660f5367
                                  ______
@@ -47,13 +33,14 @@ You can grab the container from Docker Hub: `docker pull wardwouts/pwnbox`
                 pwd > $HOME/.cdj
                 export cdj=$(cat $HOME/.cdj)
         }
- 1. The container engine can be set to podman by setting the following environment variable:
-
+ 1. If neither ctfname is given nor $cdj is set, it takes the last part of the current path as ctfname. (So `/home/username/workdir` would become ctfname `workdir`.
+ 2. The `$cdj` directory or current directory will be mounted under `/root/work` in the container upon container creation.
+ 3. To start and/or reattach an existing container simply run the `pwnbox` script again with the same ctf name.
+ 4. The container engine can be set to podman by setting the following environment variable:
         DOCKER_COMMAND=podman
 
 ### Limitations
- 1. If you need to edit anything in /proc, you must edit `run.sh` to use the `--privileged` option to `docker` instead of `--security-opt seccomp:unconfined`.
- 1. The container is designed to be isolated so no directories are mounted from the host. This allows you to have multiple containers hosting files from different CTFs.
+ 1. If you need to edit anything in /proc, you must edit `pwnbox` to use the `--privileged` option to `docker` instead of `--cap-add=SYS_PTRACE`.
 
 ### Go forth, and CTF
 •_•)
