@@ -141,4 +141,6 @@ RUN git clone https://github.com/ChrisTheCoolHut/PinCTF.git /opt/PinCTF && \
 # install one_gadget seccomp-tools
 RUN gem install one_gadget seccomp-tools
 
+WORKDIR /root/work
+
 ENTRYPOINT ["/bin/bash"]
