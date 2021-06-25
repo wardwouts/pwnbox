@@ -13,7 +13,7 @@ MAINTAINER ward@wouts.nl
 ENV DEBIAN_FRONTEND noninteractive
 
 # Set LC_ALL to a safe value so pip doesn't break
-ENV LC_ALL C
+ENV LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=C.UTF-8
 
 RUN dpkg --add-architecture i386
 RUN apt-get update \
@@ -97,7 +97,9 @@ RUN pip3 install --upgrade pip \
         ropper \
         xortool \
         meson \
-        ninja
+        ninja \
+        frida-tools \
+        frida
 
 # install pwntools 3
 RUN pip3 install --upgrade pwntools
