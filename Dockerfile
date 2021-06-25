@@ -2,12 +2,12 @@
 # Dockerfile to build a container for binary reverse engineering #
 # and exploitation. Suitable for CTFs.                           #
 #                                                                #
-# See https://github.com/superkojiman/pwnbox for details.        #
+# See https://github.com/wardwouts/pwnbox for details.        #
 #                                                                #
-# To build: docker build -t superkojiman/pwnbox                  #
+# To build: docker build -t wardwouts/pwnbox                  #
 #----------------------------------------------------------------#
 
-FROM phusion/baseimage:latest
+FROM debian:buster-slim
 MAINTAINER ward@wouts.nl
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -16,153 +16,101 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV LC_ALL C
 
 RUN dpkg --add-architecture i386
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confnew" upgrade -y
+RUN apt-get update \
+    && apt-get -o Dpkg::Options::="--force-confnew" upgrade -y
 
 #-------------------------------------#
 # Install packages from Ubuntu repos  #
 #-------------------------------------#
-RUN DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confnew" install -y \
-    sudo \
-    build-essential \
-    gcc-multilib \
-    g++-multilib \
-    gdb \
-    gdb-multiarch \
-    python-dev \
-    python3-dev \
-    python-pip \
-    python3-pip \
-    ipython \
-    default-jdk \
-    net-tools \
-    nasm \
-    cmake \
-    rubygems \
-    vim \
-    tmux \
-    git \
-    binwalk \
-    strace \
-    ltrace \
-    autoconf \
-    socat \
-    netcat \
-    nmap \
-    wget \
-    tcpdump \
-    exiftool \
-    squashfs-tools \
-    unzip \
-    virtualenvwrapper \
-    upx-ucl \
-    man-db \
-    manpages-dev \
-    libtool-bin \
-    bison \
-    libini-config-dev \
-    libssl-dev \
-    libffi-dev \
-    libglib2.0-dev \
-    libc6:i386 \
-    libncurses5:i386 \
-    libstdc++6:i386 \
-    libc6-dev-i386
+RUN mkdir -p /usr/share/man/man1 \
+    && apt-get -o Dpkg::Options::="--force-confnew" install -y \
+        sudo \
+        apt-utils \
+        locales \
+        build-essential \
+        gcc-multilib \
+        g++-multilib \
+        gdb \
+        gdb-multiarch \
+        python3-dev \
+        python3-pip \
+        ipython3 \
+        default-jdk-headless \
+        default-jdk \
+        net-tools \
+        nasm \
+        cmake \
+        rubygems \
+        ruby-dev \
+        vim \
+        tmux \
+        git \
+        binwalk \
+        strace \
+        ltrace \
+        autoconf \
+        socat \
+        netcat \
+        nmap \
+        wget \
+        tcpdump \
+        exiftool \
+        squashfs-tools \
+        unzip \
+        upx-ucl \
+        man-db \
+        manpages-dev \
+        libtool-bin \
+        bison \
+        gperf \
+        libseccomp-dev \
+        libini-config-dev \
+        libssl-dev \
+        libffi-dev \
+        libc6-dbg \
+        libglib2.0-dev \
+        libc6:i386 \
+        libc6-dbg:i386 \
+        libncurses5:i386 \
+        libstdc++6:i386 \
+        libc6-dev-i386 \
+        binutils
 
-RUN apt-get -y autoremove
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && locale-gen en_US.UTF-8 \
+    && update-locale
 
 #-------------------------------------#
 # Install stuff from pip repos        #
 #-------------------------------------#
-RUN pip install \
-    pycipher \
-    uncompyle \
-    ropgadget \
-    distorm3 \
-    filebytes \
-    r2pipe \
-    scapy \
-    python-constraint
-
-# setup angr virtualenv
-RUN bash -c 'source /etc/bash_completion.d/virtualenvwrapper && \
-    mkvirtualenv angr && \
-    pip install angr && \
-    deactivate'
+RUN pip3 install --upgrade pip \
+    && pip3 install \
+        r2pipe \
+        scapy \
+        python-constraint \
+        pycipher \
+        uncompyle \
+        pipenv \
+        manticore[native] \
+        ropper \
+        xortool \
+        meson \
+        ninja
 
 # install pwntools 3
-RUN pip install --upgrade pwntools
-
-# install docopt for xortool
-RUN pip install docopt
+RUN pip3 install --upgrade pwntools
 
 #-------------------------------------#
 # Install stuff from GitHub repos     #
 #-------------------------------------#
-# install capstone
-RUN git clone https://github.com/aquynh/capstone.git /opt/capstone && \
-    cd /opt/capstone && \
-    ./make.sh && \
-    ./make.sh install  && \
-    pip install capstone && \
-    pip3 install capstone
-
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confnew" install -y \
-    binutils
-
-# install radare2
-RUN git clone https://github.com/radare/radare2.git /opt/radare2 && \
-    cd /opt/radare2 && \
-    git fetch --tags && \
-    git checkout $(git describe --tags $(git rev-list --tags --max-count=1)) && \
-    ./sys/install.sh  && \
-    make symstall
-
-# install ropper
-RUN git clone https://github.com/sashs/Ropper.git /opt/ropper && \
-    cd /opt/ropper && \
-    python setup.py install && \
-    rm -rf /opt/ropper
-
-# install ropeme
-RUN git clone https://github.com/packz/ropeme.git /opt/ropeme && \
-    sed -i 's/distorm/distorm3/g' /opt/ropeme/ropeme/gadgets.py
-
-# install rp++
-RUN mkdir /opt/rp && \
-    wget https://github.com/downloads/0vercl0k/rp/rp-lin-x64 -P /opt/rp && \
-    wget https://github.com/downloads/0vercl0k/rp/rp-lin-x86 -P /opt/rp
-
-# install retargetable decompiler scripts
-RUN git clone https://github.com/s3rvac/retdec-sh.git /opt/retdec-sh
-
-# install villoc
-RUN git clone https://github.com/wapiflapi/villoc.git /opt/villoc
-
-# install libformatstr
-RUN git clone https://github.com/hellman/libformatstr.git /opt/libformatstr && \
-    cd /opt/libformatstr && \
-    python setup.py install && \
-    rm -rf /opt/libformatstr
-
-# install libseccomp
-RUN git clone https://github.com/seccomp/libseccomp.git /opt/libseccomp && \
-    cd /opt/libseccomp && \
-    ./autogen.sh && ./configure && make && make install
-
-# install preeny
-RUN git clone https://github.com/zardus/preeny.git /opt/preeny && \
-    cd /opt/preeny && \
-    make
-
-# install xortool
-RUN git clone https://github.com/hellman/xortool.git /opt/xortool && \
-    cd /opt/xortool && \
-    python setup.py install
-
-# install tmux-resurrect
-RUN git clone https://github.com/tmux-plugins/tmux-resurrect.git /opt/tmux-resurrect
+# install rizin
+RUN git clone https://github.com/rizinorg/rizin /opt/rizin && \
+    cd /opt/rizin && \
+    meson build && \
+    ninja -C build && \
+    ninja -C build install
 
 # install libc-database
 RUN git clone https://github.com/niklasb/libc-database /opt/libc-database
@@ -178,12 +126,17 @@ RUN git clone https://github.com/pwndbg/pwndbg.git /opt/pwndbg && \
     cd /opt/pwndbg && \
     ./setup.sh
 
+# install libseccomp
+RUN git clone https://github.com/seccomp/libseccomp.git /opt/libseccomp && \
+    cd /opt/libseccomp && \
+    ./autogen.sh && ./configure && make && make install
+
 # install PinCTF
 RUN git clone https://github.com/ChrisTheCoolHut/PinCTF.git /opt/PinCTF && \
     cd /opt/PinCTF && \
     ./installPin.sh
 
-# install one_gadget
-RUN gem install one_gadget
+# install one_gadget seccomp-tools
+RUN gem install one_gadget seccomp-tools
 
 ENTRYPOINT ["/bin/bash"]
